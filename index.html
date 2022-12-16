@@ -15,16 +15,28 @@
 </head>
 
 <body>
-    <form class="needs-validation" novalidate>
-        <div class="col-4 mb-3 ui-widget">
-            <label for="enterCity" class="form-label">Enter a City:</label>
-            <input type="text" class="form-control" id="cityName" placeholder="Enter city name here" required>
-            <div class="invalid-feedback">
-                Please enter a city.
+    <main>
+
+        <sidebar>
+            <section class="search">
+        <form class="needs-validation" novalidate>
+            <div class="col-4 mb-3 ui-widget">
+                <label for="enterCity" class="form-label">Enter a City:</label>
+                <input type="text" class="form-control" id="cityName" placeholder="Enter city name here" required>
+                <div class="invalid-feedback">
+                    Please enter a city.
+                </div>
             </div>
-        </div>
-        <button type="submit" class="btn btn-primary" id="searchBtn">Search</button>
-    </form>
+            <button type="submit" class="btn btn-primary" id="searchBtn">Search</button>
+        </form>
+    </section>
+
+        <section class="search-history">
+            <h3 id="displaySaved">Past Searches:</h3>
+        </section>
+        </sidebar>
+
+    </main>
 
     <!-- jquery -->
     <script src="https://code.jquery.com/jquery-3.6.2.js"

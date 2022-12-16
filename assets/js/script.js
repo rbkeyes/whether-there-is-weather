@@ -3,14 +3,17 @@ const APIKey = "1e4594222d984bf5f75b387428c1a416";
 
 const searchBtn = document.getElementById('searchBtn');
 let cityName = ""
-let city = ""
-let state = ""
-let country = ""
+// let city = ""
+// let state = ""
+// let country = ""
 // let chooseOne = [];
-const searchHistory = [];
-let latitude = ""
-let longitude = ""
+const savedCities = [];
+// let latitude = ""
+// let longitude = ""
+const savedCoordinates = [];
+let pastSearches = "";
 
+// event listener to run search on button click
 searchBtn.addEventListener("click", function (event) {
     // event.preventDefault();
     cityName = document.getElementById('cityName').value;
@@ -26,54 +29,64 @@ searchBtn.addEventListener("click", function (event) {
     getCities();
 });
 
-// add code to capitalize first letter of city
-
-// get coordinates from search
+// get city from geo api
+// for now, just retrieve one value. Could pull 5 and offer users option to select from (modal, )
 function getCities() {
     console.log(cityName)
-    let locationURL = "http://api.openweathermap.org/geo/1.0/direct?q=" + cityName + "&limit=" + 5 + "&appid=" + APIKey;
+    let locationURL = "http://api.openweathermap.org/geo/1.0/direct?q=" + cityName + "&limit=" + 1 + "&appid=" + APIKey;
     fetch(locationURL)
         .then(function (response) {
             console.log(response);
             return response.json();
         })
-    .then(function (data) {
-        console.log(data[0]);
-        // once it's working I'll add ability to select specific city from list, for now just use i=0
-    //     for (let i = 0; i < data.length; i++) {
-    //         state = data[i].state;
-    //         country = data[i].country;
-    //         console.log(city + ", " + state + ", " + country);
-    //         chooseOne.push({ city: city, state: state, country: country });
-    //         latitude.push(data[i].lat);
-    //         longitude.push(data[i].lon);
-    //     }
-    state = data[0].state;
-    country = data[0].country;
-    city = cityName + ", " + state + ", " + country;
-    console.log(city);
-    searchHistory.push({city: city, coordinates: latitude + ", " + longitude,})
-    console.log(searchHistory)
-    GetCoordinates()
-    })
+        .then(function (data) {
+            console.log(data[0]);
+            let state = data[0].state;
+            let country = data[0].country;
+            let city = { city: cityName + ", " + state + ", " + country, };
+            console.log(city);
+            savedCities.push(city);
+            console.log(savedCities)
+            saveToLocalStorage("search history", savedCities)
+            GetCoordinates(data)
+        })
 };
 
-// populate results of the different cities
-// when user selects which city they're looking for, then getCoordinates()
-// could be an alert, or a modal?
-
-function GetCoordinates() {
-    latitude = data[0].lat;
-    longitude = data[0].lon;
+// get coordinates
+function GetCoordinates(data) {
+    let latitude = data[0].lat;
+    let longitude = data[0].lon;
     console.log("lat = " + latitude + " lon = " + longitude);
-    localStorage.setItem("latitude = ", JSON.stringify(latitude));
-    localStorage.setItem("longitude = ", longitude);
-    getWeather();
+    savedCoordinates.push({ latitude: latitude, longitude: longitude, })
+    console.log(savedCoordinates);
+    saveToLocalStorage("city coordinates", savedCoordinates);
 }
 
+// save to local storage (key, value assigned when function is called)
+function saveToLocalStorage(key, value) {
+    localStorage.setItem(key, JSON.stringify(value));
+    console.log(localStorage);
+    value = ""
+    console.log(key + value)
+}
 
-function saveSearchtoLocalStorage(city, coordinates) {
-    
+// // retrieve from local storage
+// function retrieveFromLocalStorage(key, variable) {
+//     variable = JSON.parse(localStorage.getItem(key));
+//     console.log(variable);
+//     // return retrieved;
+//     renderSearchHistory(pastSearches);
+// }
+// console.log(retrieveFromLocalStorage("search history"))
+
+function renderSearchHistory(key) {
+    pastSearches = JSON.parse(localStorage.getItem(key));
+    if (pastSearches !== null) {
+        console.log(pastSearches);
+        const displaySaved = document.getElementById('displaySaved');
+        console.log(displaySaved);
+
+    }
 }
 
 function getWeather() {
@@ -93,3 +106,44 @@ function getWeather() {
         })
 };
 
+renderSearchHistory("search history");
+
+// retrieveFromLocalStorage("search history", pastSearches);
+// retrieveFromLocalStorage("city coordinates: ")
+
+
+// get coordinates from search
+// this version is for retrieve 5 results
+// function getCities() {
+//     console.log(cityName)
+//     let locationURL = "http://api.openweathermap.org/geo/1.0/direct?q=" + cityName + "&limit=" + 5 + "&appid=" + APIKey;
+//     fetch(locationURL)
+//         .then(function (response) {
+//             console.log(response);
+//             return response.json();
+//         })
+//     .then(function (data) {
+//         console.log(data[0]);
+// once it's working I'll add ability to select specific city from list, for now just use i=0
+//     for (let i = 0; i < data.length; i++) {
+//         state = data[i].state;
+//         country = data[i].country;
+//         console.log(city + ", " + state + ", " + country);
+//         chooseOne.push({ city: city, state: state, country: country });
+//         latitude.push(data[i].lat);
+//         longitude.push(data[i].lon);
+//     }
+//     let state = data[0].state;
+//     let country = data[0].country;
+//     let city = {city: cityName + ", " + state + ", " + country,};
+//     console.log(city);
+//     savedCities.push(city);
+//     console.log(savedCities)
+//     saveToLocalStorage("search history: ", savedCities)
+//     GetCoordinates(data)
+//     })
+// };
+
+// populate results of the different cities
+// when user selects which city they're looking for, then getCoordinates()
+// could be an alert, or a modal?
