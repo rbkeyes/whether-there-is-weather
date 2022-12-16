@@ -12,6 +12,7 @@ const savedCities = [];
 // let longitude = ""
 const savedCoordinates = [];
 let pastSearches = "";
+const displaySaved = document.getElementById('displaySaved');
 
 // event listener to run search on button click
 searchBtn.addEventListener("click", function (event) {
@@ -79,15 +80,29 @@ function saveToLocalStorage(key, value) {
 // }
 // console.log(retrieveFromLocalStorage("search history"))
 
+// retrieve & render search history
 function renderSearchHistory(key) {
     pastSearches = JSON.parse(localStorage.getItem(key));
+    // create div for past search results
+    let pastSearchEl = document.createElement('div');
+    console.log(pastSearches);
+    // add classes for info alert (bootstrap)
+    pastSearchEl.classList.add("alert","alert-info", 'alert-dismissible', 'fade', 'show');
+    pastSearchEl.setAttribute('role', "alert");
     if (pastSearches !== null) {
-        console.log(pastSearches);
-        const displaySaved = document.getElementById('displaySaved');
-        console.log(displaySaved);
-
+        pastSearchEl.textContent = pastSearches[0].city;
+        displaySaved.appendChild(pastSearchEl);
+        console.log(pastSearchEl);
+    } else {
+        // maybe hard code this one and just change the class & change text content when results are available?
+        pastSearchEl.classList.remove('alert-info')
+        pastSearchEl.classList.add('alert-light');
+        pastSearchEl.textContent = "No past search results to display."
+        displaySaved.appendChild(pastSearchEl);
+        console.log(pastSearchEl);
     }
-}
+    // add button to clear search       
+    }
 
 function getWeather() {
     // console.log(localStorage);
