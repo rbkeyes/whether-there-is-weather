@@ -84,22 +84,27 @@ function saveToLocalStorage(key, value) {
 function renderSearchHistory(key) {
     pastSearches = JSON.parse(localStorage.getItem(key));
     // create div for past search results
-    let pastSearchEl = document.createElement('div');
-    console.log(pastSearches);
     // add classes for info alert (bootstrap)
-    pastSearchEl.classList.add("alert","alert-info", 'alert-dismissible', 'fade', 'show');
-    pastSearchEl.setAttribute('role', "alert");
+    // pastSearchLi.classList.add('past-search-list');
+    // pastSearchLi.setAttribute('style', "background-color;#D0E4E4");
+    let pastSearchLi = document.createElement('li');
+    console.log(pastSearches);
     if (pastSearches !== null) {
-        pastSearchEl.textContent = pastSearches[0].city;
-        displaySaved.appendChild(pastSearchEl);
-        console.log(pastSearchEl);
+    for (i=0; i<pastSearches.length; i++) {
+            for (let i=0; i< pastSearches.length; i++) {
+                pastSearchLi.textContent = pastSearches[i].city;
+                displaySaved.appendChild(pastSearchLi);
+                console.log(pastSearchLi);
+            }
+    }
     } else {
         // maybe hard code this one and just change the class & change text content when results are available?
-        pastSearchEl.classList.remove('alert-info')
-        pastSearchEl.classList.add('alert-light');
-        pastSearchEl.textContent = "No past search results to display."
-        displaySaved.appendChild(pastSearchEl);
-        console.log(pastSearchEl);
+        // pastSearchLi.classList.remove('alert-info')
+        // pastSearchLi.classList.add('alert-light');
+        pastSearchLi.setAttribute('style', 'background-color:#E8C8B4')
+        pastSearchLi.textContent = "No past search results to display."
+        displaySaved.appendChild(pastSearchLi);
+        console.log(pastSearchLi);
     }
     // add button to clear search       
     }
