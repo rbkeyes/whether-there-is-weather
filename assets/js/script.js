@@ -3,11 +3,11 @@ const APIKey = "1e4594222d984bf5f75b387428c1a416";
 
 const searchBtn = document.getElementById('searchBtn');
 let cityName = ""
-// let city = ""
+let city = ""
 // let state = ""
 // let country = ""
 // let chooseOne = [];
-const savedCities = [];
+let savedCities = [];
 // let latitude = ""
 // let longitude = ""
 const savedCoordinates = [];
@@ -16,41 +16,40 @@ const displaySaved = document.getElementById('displaySaved');
 
 // event listener to run search on button click
 searchBtn.addEventListener("click", function (event) {
-    // event.preventDefault();
     cityName = document.getElementById('cityName').value;
-
     if (cityName) {
+        getCities(cityName);
         event.preventDefault();
-        // city = cityName;
         console.log(cityName);
     } else {
         console.log('You must enter a city!')
         return;
     }
-    getCities();
 });
 
+// add function to capitalize first letter of city name before saving to storage.
+
 // get city from geo api
-// for now, just retrieve one value. Could pull 5 and offer users option to select from (modal, )
-function getCities() {
-    console.log(cityName)
-    let locationURL = "http://api.openweathermap.org/geo/1.0/direct?q=" + cityName + "&limit=" + 1 + "&appid=" + APIKey;
+// For now, just take first result and return result.
+function getCities(input) {
+    let locationURL = "http://api.openweathermap.org/geo/1.0/direct?q=" + input + "&limit=" + 1 + "&appid=" + APIKey;
     fetch(locationURL)
         .then(function (response) {
             console.log(response);
             return response.json();
         })
         .then(function (data) {
-            console.log(data[0]);
+            console.log(data);
             let state = data[0].state;
             let country = data[0].country;
             let city = { city: cityName + ", " + state + ", " + country, };
             console.log(city);
             savedCities.push(city);
             console.log(savedCities)
-            saveToLocalStorage("search history", savedCities)
+            saveToLocalStorage("Cities", savedCities)
             GetCoordinates(data)
         })
+    return savedCities;
 };
 
 // get coordinates
@@ -58,9 +57,11 @@ function GetCoordinates(data) {
     let latitude = data[0].lat;
     let longitude = data[0].lon;
     console.log("lat = " + latitude + " lon = " + longitude);
-    savedCoordinates.push({ latitude: latitude, longitude: longitude, })
-    console.log(savedCoordinates);
-    saveToLocalStorage("city coordinates", savedCoordinates);
+    // savedCoordinates.push({ latitude: latitude, longitude: longitude, })
+    // console.log(savedCoordinates);
+    // saveToLocalStorage("Coordinates", savedCoordinates);
+    // return savedCoordinates;
+    getWeather(latitude, longitude);
 }
 
 // save to local storage (key, value assigned when function is called)
@@ -68,54 +69,41 @@ function saveToLocalStorage(key, value) {
     localStorage.setItem(key, JSON.stringify(value));
     console.log(localStorage);
     value = ""
-    console.log(key + value)
 }
-
-// // retrieve from local storage
-// function retrieveFromLocalStorage(key, variable) {
-//     variable = JSON.parse(localStorage.getItem(key));
-//     console.log(variable);
-//     // return retrieved;
-//     renderSearchHistory(pastSearches);
-// }
-// console.log(retrieveFromLocalStorage("search history"))
 
 // retrieve & render search history
 function renderSearchHistory(key) {
     pastSearches = JSON.parse(localStorage.getItem(key));
-    // create div for past search results
-    // add classes for info alert (bootstrap)
-    // pastSearchLi.classList.add('past-search-list');
-    // pastSearchLi.setAttribute('style', "background-color;#D0E4E4");
-    let pastSearchLi = document.createElement('li');
-    console.log(pastSearches);
+    console.log(pastSearches)
     if (pastSearches !== null) {
-    for (i=0; i<pastSearches.length; i++) {
-            for (let i=0; i< pastSearches.length; i++) {
-                pastSearchLi.textContent = pastSearches[i].city;
-                displaySaved.appendChild(pastSearchLi);
-                console.log(pastSearchLi);
-            }
-    }
+        console.log(pastSearches.length);
+        for (i = 0; i < pastSearches.length; i++) {
+            let pastSearchLi = document.createElement('li');
+            console.log(pastSearches[i]);
+            pastSearchLi.textContent = pastSearches[i].city;
+            pastSearchLi.setAttribute('class', 'pastSearches');
+            displaySaved.appendChild(pastSearchLi);
+            console.log(displaySaved);
+            savedCities = pastSearches;
+            console.log(savedCities)
+        }
     } else {
-        // maybe hard code this one and just change the class & change text content when results are available?
-        // pastSearchLi.classList.remove('alert-info')
-        // pastSearchLi.classList.add('alert-light');
-        pastSearchLi.setAttribute('style', 'background-color:#E8C8B4')
-        pastSearchLi.textContent = "No past search results to display."
-        displaySaved.appendChild(pastSearchLi);
-        console.log(pastSearchLi);
+        let noPastSearchLi = document.createElement('li');
+        noPastSearchLi.setAttribute('class', 'noPastSearches')
+        noPastSearchLi.textContent = "No past search results to display."
+        displaySaved.appendChild(noPastSearchLi);
+        console.log(noPastSearchLi);
     }
     // add button to clear search       
-    }
+}
 
-function getWeather() {
+function getWeather(lat, lon) {
     // console.log(localStorage);
     // var storedLat = JSON.parse(localStorage.getItem('latitude'));
     // var storedLon = JSON.parse(localStorage.getItem('longitude'));
     // console.log(storedLat);
     // console.log(storedLon);
-    let queryURL = "http://api.openweathermap.org/data/2.5/forecast?lat=" + latitude + "&lon=" + longitude + "&appid=" + APIKey + "&units=imperial";
+    let queryURL = "http://api.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" + lon + "&appid=" + APIKey + "&units=imperial";
     fetch(queryURL)
         .then(function (response) {
             console.log(response);
@@ -126,44 +114,7 @@ function getWeather() {
         })
 };
 
-renderSearchHistory("search history");
+renderSearchHistory("Cities");
 
 // retrieveFromLocalStorage("search history", pastSearches);
 // retrieveFromLocalStorage("city coordinates: ")
-
-
-// get coordinates from search
-// this version is for retrieve 5 results
-// function getCities() {
-//     console.log(cityName)
-//     let locationURL = "http://api.openweathermap.org/geo/1.0/direct?q=" + cityName + "&limit=" + 5 + "&appid=" + APIKey;
-//     fetch(locationURL)
-//         .then(function (response) {
-//             console.log(response);
-//             return response.json();
-//         })
-//     .then(function (data) {
-//         console.log(data[0]);
-// once it's working I'll add ability to select specific city from list, for now just use i=0
-//     for (let i = 0; i < data.length; i++) {
-//         state = data[i].state;
-//         country = data[i].country;
-//         console.log(city + ", " + state + ", " + country);
-//         chooseOne.push({ city: city, state: state, country: country });
-//         latitude.push(data[i].lat);
-//         longitude.push(data[i].lon);
-//     }
-//     let state = data[0].state;
-//     let country = data[0].country;
-//     let city = {city: cityName + ", " + state + ", " + country,};
-//     console.log(city);
-//     savedCities.push(city);
-//     console.log(savedCities)
-//     saveToLocalStorage("search history: ", savedCities)
-//     GetCoordinates(data)
-//     })
-// };
-
-// populate results of the different cities
-// when user selects which city they're looking for, then getCoordinates()
-// could be an alert, or a modal?

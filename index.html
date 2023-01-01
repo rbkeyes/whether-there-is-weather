@@ -15,29 +15,36 @@
 </head>
 
 <body>
+<header>
+    <h1>Weather Dashboard</h1>
+</header>
+
     <main>
-
+        <!-- search + past results -->
         <sidebar>
-            <section class="search">
-        <form class="needs-validation" novalidate>
-            <div class="col-4 mb-3 ui-widget">
-                <label for="enterCity" class="form-label">Enter a City:</label>
-                <input type="text" class="form-control" id="cityName" placeholder="Enter city name here" required>
-                <div class="invalid-feedback">
-                    Please enter a city.
-                </div>
-            </div>
-            <button type="submit" class="btn btn-primary" id="searchBtn">Search</button>
-        </form>
-    </section>
+            <section class="search col-4">
+                <form class="needs-validation" novalidate>
+                    <div class="mb-3 ui-widget">
+                        <label for="enterCity" class="form-label">Enter a City:</label>
+                        <input type="text" class="form-control" id="cityName" placeholder="Enter city name here"
+                            required>
+                        <div class="invalid-feedback">
+                            Please enter a city.
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="searchBtn">Search</button>
+                </form>
+            </section>
 
-        <section class="search-history col-4">
-            <h3>Past Searches:</h3>
-            <ul id="displaySaved">
-                
-            </ul>
-        </section>
+            <section class="search-history col-4">
+                <h3>Past Searches:</h3>
+                <ul id="displaySaved">
+                </ul>
+            </section>
         </sidebar>
+
+        <!-- display weather results -->
+
 
     </main>
 

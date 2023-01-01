@@ -1,4 +1,40 @@
-#display-saved li {
+body {
+    background-color: rgb(230, 223, 236);
+}
+
+h1 {
+    color: rgb(233, 226, 238);
+    background: linear-gradient(90deg, rgba(77,3,87,1) 0%, rgba(26,5,50,1) 50%, rgba(32,2,111,1) 100%);
+    text-align: center;
+    padding: 1rem;
+    margin: 0;
+}
+
+ul {
+    margin-bottom: 0;
+    padding-left: 0;
+}
+
+.search, .search-history {
+    padding: 1.5rem;
+}
+
+.pastSearches {
     color:rgb(15, 37, 37);
-    background-color: #D0E4E4;
+    background-color: #d0d0d0;
+    padding: 5px;
+    margin: 3px;
+    border-radius: 5px;
+}
+
+.noPastSearches {
+    color:rgb(15, 37, 37);
+    background-color: #E8C8B4;
+    padding: 5px;
+    margin: 3px;
+    border-radius: 5px;
+}
+
+#searchBtn {
+    width: 100%;
 }
